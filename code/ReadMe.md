@@ -14,5 +14,4 @@ This script is being developed to measure the rotor speed of the the motor for t
 ***
 ## Variable_signal_generator
 
-
 This sub-project uses vhdl code to take an input from an arduino and output a variable frequency square wave for use in driving resonanat converters.
