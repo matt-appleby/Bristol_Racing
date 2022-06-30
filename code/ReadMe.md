@@ -9,9 +9,15 @@ Each folder contains a subproject
 ## PWM
 This script is used to generate a 1KHz PWM signal from arduino that outputs to the gate driver
 ***
-## Tachometer
-This script is being developed to measure the rotor speed of the the motor for the test bed and subsequent vehicle. A magnet is attatched to the rotor which induces a voltage in a sensing coil. The code aims to sample the voltage and apply a FFT to the sample to find the oscillation frequency and hence the speed.
+## Dyno
+Programs to run the dynamometer
+
+Arduino program measures torque and speed.
 ***
 ## Variable_signal_generator
 
 This sub-project uses vhdl code to take an input from an arduino and output a variable frequency square wave for use in driving resonanat converters.
+
+It should be implemented by an fpga.
+
+## BatteryTestRig
