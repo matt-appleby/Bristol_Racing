@@ -39,7 +39,7 @@ A0  -   Throttle input
 // K to GND
 // pin 7 to be used to detect time start
 // Thermistor potential divider wiring:
-// V_in ----R_set---- A0 ----Thermistor---- GND
+// V_in ----R_set---- A1 ----Thermistor---- GND
 
 // SD card datalogger
 // MOSI - pin 11
@@ -128,7 +128,7 @@ void loop() {
     lcd.print(nSeconds);
 
     // thermistor code
-    int V_value = analogRead(A0);
+    int V_value = analogRead(A1);
     float V_out = V_value * (V_in / 1023.0);
     float R_thermistor = (V_out * R_set) / (V_in - V_out);
     float T = ((B * T_0) / (T_0 * log(R_thermistor / R_0) + B)) - 273;//Motor temp
