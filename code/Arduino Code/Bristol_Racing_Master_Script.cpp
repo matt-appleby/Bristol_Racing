@@ -1,5 +1,12 @@
 // Master script
 
+/* todo:
+
+- voltage sensing
+- current sensing
+*/
+ 
+
 // Connections:
 // VSS to GND
 // VDD to 5V
@@ -63,7 +70,13 @@ void setup() {
   lcd.clear();
   pinMode(7, INPUT);
 
-
+    // load headers into csv
+    String header = "Time, V batt high, V batt low, current, motor temp, throttle";// make a string for assembling the data to log:
+    File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
+    if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
+        dataFile.println(header);
+        dataFile.close();
+    }
 }
 
 void loop() {
@@ -78,9 +91,9 @@ void loop() {
 
     // time
     // (im deleting race time for now, add later)
-    long int t2 = millis();
-    nSeconds = ((t2) % 60000) / 1000;
-    nMinutes = (t2) / 60000;
+    long int time = millis();
+    nSeconds = ((time) % 60000) / 1000;
+    nMinutes = (time) / 60000;
     lcd.setCursor(10, 1);
     if (nMinutes <= 9) {
     lcd.print("0");
@@ -99,7 +112,8 @@ void loop() {
     float T = ((B * T_0) / (T_0 * log(R_thermistor / R_0) + B)) - 273;//Motor temp
 
     // Data logging  
-    String dataString = "12345";// make a string for assembling the data to log:
+    // "Time, V batt high, V batt low, current, motor temp, throttle"
+    String dataString = time+", V1, V2, I,"+ T + ", " + PWM_pct; // make a string for assembling the data to log:
     File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
     if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
         dataFile.println(dataString);
