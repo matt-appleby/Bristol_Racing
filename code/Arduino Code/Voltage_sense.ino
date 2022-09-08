@@ -2,7 +2,7 @@
   Program:      volt_measure
 
 
-}Description:  Reads value on analog input A2 and calculates
+  Description:  Reads value on analog input A2 and calculates
                 the voltage assuming that a voltage divider
                 network on the pin divides by 11.
   

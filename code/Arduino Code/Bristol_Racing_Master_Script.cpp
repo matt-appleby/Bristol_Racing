@@ -6,6 +6,29 @@
 - current sensing
 */
  
+/*
+Pins:
+
+A0  -   Throttle input
+
+1   -   
+2   -   to be used to detect time start
+3   -   PWM output
+4   -   d4      LCD      
+5   -   d5      LCD
+6   -   d6      LCD
+7   -   d7      LCD
+8   -   rs      LCD
+9   -   en      LCD
+10  -   SS      SD card
+11  -   MOSI    SD card
+12  -   MISO    SD card
+13  -   SCK     SD card
+
+
+*/
+
+
 
 // Connections:
 // VSS to GND
@@ -37,7 +60,12 @@ int throttle_val = 0;
 float throttle_val_pct = 0;
 
 // lcd
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+const int d4 = 4;
+const int d5 = 5;
+const int d6 = 6;
+const int d7 = 7;
+const int rs = 8;
+const int en = 9;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 int nMinutes = 0;
 int nSeconds = 0;
@@ -62,7 +90,7 @@ void setup() {
     lcd.print("Bristol Racing!");
     delay(1000);
     lcd.clear();
-    pinMode(7, INPUT);
+    pinMode(2, INPUT);
 
     // load headers into csv
     String header = "Time, V batt high, V batt low, current, motor temp, throttle";// make a string for assembling the data to log:
