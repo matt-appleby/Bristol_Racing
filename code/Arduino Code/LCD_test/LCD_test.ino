@@ -54,20 +54,26 @@ void loop() {
   // print the number of seconds since reset:
 
   // lcd.print(millis() / 1000);
-  if ((digitalRead(7)) == HIGH) {
-
+  if ((digitalRead(7)) == HIGH) {//when race button is pressed, take a time and start a infinite loop
     long int t1 = millis();
-
     while (true) {
-
       long int t2 = millis();
-    
+
+      // battery - current - motor temp - race time
+      //
+      // each batteries voltage
+      // speed up or slow down
+
+
+      // battery
       lcd.setCursor(1, 0);
       lcd.print("87.1%");
-      
+
+      // current draw 
       lcd.setCursor(10, 0);
       lcd.print("12.3A");
       
+      // motor temp
       lcd.setCursor(1, 1);
       lcd.print("45.6C");
 
