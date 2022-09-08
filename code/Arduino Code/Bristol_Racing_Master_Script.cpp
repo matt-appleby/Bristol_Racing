@@ -18,18 +18,12 @@
 // Thermistor potential divider wiring:
 // V_in ----R_set---- A0 ----Thermistor---- GND
 
-/*
-  SD card datalogger
-
-  FOR an UNO & MEGA:
-
- ** MOSI - pin 11
- ** MISO - pin 12
- ** SCK - pin 13
- ** SS - pin 10
- ** If you can't figure out the other two pins then just give up...
-
-*/
+// SD card datalogger
+// MOSI - pin 11
+// MISO - pin 12
+// SCK - pin 13
+// SS - pin 10
+// If you can't figure out the other two pins then just give up...
 
 #include <SPI.h>
 #include <SD.h>
@@ -59,16 +53,16 @@ const long int B = 3950.0;//B is a thermistor constant
 const int chipSelect = 10;
 
 void setup() {
-  pinMode(PWM_pin, OUTPUT);
+    pinMode(PWM_pin, OUTPUT);
 
-  Serial.begin(115200);
-  lcd.begin(16, 2);// set up the LCD's number of columns and rows:
+    Serial.begin(115200);
+    lcd.begin(16, 2);// set up the LCD's number of columns and rows:
 
-  //lcd test
-  lcd.print("Bristol Racing!");
-  delay(1000);
-  lcd.clear();
-  pinMode(7, INPUT);
+    //lcd test
+    lcd.print("Bristol Racing!");
+    delay(1000);
+    lcd.clear();
+    pinMode(7, INPUT);
 
     // load headers into csv
     String header = "Time, V batt high, V batt low, current, motor temp, throttle";// make a string for assembling the data to log:
