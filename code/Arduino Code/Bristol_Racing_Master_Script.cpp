@@ -11,6 +11,21 @@
 // Thermistor potential divider wiring:
 // V_in ----R_set---- A0 ----Thermistor---- GND
 
+/*
+  SD card datalogger
+
+  FOR an UNO & MEGA:
+
+ ** MOSI - pin 11
+ ** MISO - pin 12
+ ** SCK - pin 13
+ ** SS - pin 10
+ ** If you can't figure out the other two pins then just give up...
+
+*/
+
+#include <SPI.h>
+#include <SD.h>
 #include <LiquidCrystal.h>
 
 // throttle
@@ -33,6 +48,8 @@ const int V_in = 5.0;
 const long int T_0 = 298.0; // T_0 is temperature in Kelvin that the thermistor resistance is known,
 const long int B = 3950.0;//B is a thermistor constant 
 
+//sd
+const int chipSelect = 10;
 
 void setup() {
   pinMode(PWM_pin, OUTPUT);
@@ -45,6 +62,7 @@ void setup() {
   delay(1000);
   lcd.clear();
   pinMode(7, INPUT);
+
 
 }
 
@@ -79,7 +97,15 @@ void loop() {
     float V_out = V_value * (V_in / 1023.0);
     float R_thermistor = (V_out * R_set) / (V_in - V_out);
     float T = ((B * T_0) / (T_0 * log(R_thermistor / R_0) + B)) - 273;//Motor temp
-    
+
+    // Data logging  
+    String dataString = "12345";// make a string for assembling the data to log:
+    File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
+    if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
+        dataFile.println(dataString);
+        dataFile.close();
+    }
+
     //output to lcd
     // battery - current - motor temp - race time
     // want: each batteries voltage and speed up or slow down
