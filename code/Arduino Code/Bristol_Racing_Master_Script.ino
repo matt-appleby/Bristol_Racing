@@ -25,38 +25,11 @@ A1  -   Thermistor
 11  -   MOSI    SD card
 12  -   MISO    SD card
 13  -   SCK     SD card
-
-
- ** MOSI - pin 11
- ** MISO - pin 12
- ** SCK - pin 13
- ** SS - pin 10
 */
-
-
-
-// LCD connections:
-// VSS to GND
-// VDD to 5V
-// RW to GND
-// 5V ----10kohms---- V0 ----1kohms---- GND <--- potential divider for V0
-// A to 5V via a 10kohm resistor
-// K to GND
-
-
-// pin 7 to be used to detect time start
-
 
 // Thermistor potential divider wiring:
 // V_in ----R_set---- A1 ----Thermistor---- GND
 
-
-// SD card datalogger:
-// MOSI - pin 11
-// MISO - pin 12
-// SCK - pin 13
-// SS - pin 10
-// If you can't figure out the other two pins then just give up...
 
 #include <SPI.h>
 #include <SD.h>
@@ -89,6 +62,9 @@ const long int B = 3950.0;//B is a thermistor constant
 
 //sd
 const int chipSelect = 10;
+
+//
+int race_time = 0;
 
 void setup() {
     pinMode(PWM_pin, OUTPUT);
@@ -131,10 +107,12 @@ void loop() {
     analogWrite(PWM_pin, PWM_pct);//PWM out
 
     // time
-    // (im deleting race time for now, add later)
+    if (race_time==0 && PWM_pct>20){
+        race_time=millis();
+    }
     long int time = millis();
-    nSeconds = ((time) % 60000) / 1000;
-    nMinutes = (time) / 60000;
+    nSeconds = ((time-race_time) % 60000) / 1000;
+    nMinutes = (time-race_time) / 60000;
     lcd.setCursor(10, 1);
     if (nMinutes <= 9) {
     lcd.print("0");
