@@ -65,6 +65,8 @@ const int chipSelect = 10;
 
 //
 int race_time = 0;
+int race_percentage = 0;
+int battery_percentage=99;
 
 void setup() {
     pinMode(PWM_pin, OUTPUT);
@@ -149,6 +151,17 @@ void loop() {
     }
     else {
     Serial.println("error opening datalog.txt");
+    }
+
+    race_percentage=int(nMinutes*100/60);
+    //work in progress
+    battery_percentage=12;
+    lcd.setCursor(1, 5);
+    if (race_percentage > battery_percentage){
+        lcd.print("+++")
+    }
+    else {
+        lcd.print("---")
     }
 
     //output to lcd
