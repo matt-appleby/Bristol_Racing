@@ -27,6 +27,10 @@ A1  -   Thermistor
 13  -   SCK     SD card
 
 
+ ** MOSI - pin 11
+ ** MISO - pin 12
+ ** SCK - pin 13
+ ** SS - pin 10
 */
 
 
@@ -99,12 +103,21 @@ void setup() {
     pinMode(2, INPUT);
 
     // load headers into csv
-    String header = "Time, V batt high, V batt low, current, motor temp, throttle";// make a string for assembling the data to log:
-    File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
-    if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
-        dataFile.println(header);
-        dataFile.close();
+    //String header = "Time, V batt high, V batt low, current, motor temp, throttle";// make a string for assembling the data to log:
+    //File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
+    //if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
+    //    dataFile.println(header);
+    //    dataFile.close();
+    //}
+
+    Serial.print("Initializing SD card...");
+    // see if the card is present and can be initialized:
+    if (!SD.begin(chipSelect)) {
+    Serial.println("Card failed, or not present");
+    // don't do anything more:
+    while (1);
     }
+    Serial.println("card initialized.");
 }
 
 void loop() {
@@ -141,11 +154,23 @@ void loop() {
 
     // Data logging  
     // "Time, V batt high, V batt low, current, motor temp, throttle"
-    String dataString = time+", V1, V2, I,"+ T + ", " + PWM_pct; // make a string for assembling the data to log:
-    File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
-    if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
-        dataFile.println(dataString);
-        dataFile.close();
+    //String dataString = time+", V1, V2, I,"+ T + ", " + PWM_pct; // make a string for assembling the data to log:
+    //File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
+    //if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
+    //    dataFile.println(dataString);
+    //    dataFile.close();
+    //}
+
+    // make a string for assembling the data to log:
+    String dataString = "12345";
+    File dataFile = SD.open("datalog.txt", FILE_WRITE);
+    if (dataFile) {
+    dataFile.println(dataString);
+    dataFile.close();
+    Serial.println(dataString);
+    }
+    else {
+    Serial.println("error opening datalog.txt");
     }
 
     //output to lcd
