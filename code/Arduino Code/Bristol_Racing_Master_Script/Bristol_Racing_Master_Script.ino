@@ -11,6 +11,11 @@ Pins:
 
 A0  -   Throttle input
 A1  -   Thermistor
+A2
+A3
+A4 - Battery voltage 1
+A5 - Battery voltage 2
+
 
 1   -   
 2   -  
@@ -34,6 +39,10 @@ A1  -   Thermistor
 // A to 5V via a 10kohm resistor
 // K to GND
 
+//V sense Connections:
+//PD HIGH Vout - A4
+//PD LOW Vout - A5
+
 #include <SPI.h>
 #include <SD.h>
 #include <LiquidCrystal.h>
@@ -42,6 +51,16 @@ A1  -   Thermistor
 int throttle_pin = A0;
 int throttle_val = 0;
 float throttle_val_pct = 0;
+
+// voltage sense
+int V_sense_pin_HIGH = A4;
+int V_sense_pin_LOW = A5;
+int V_sense_HIGH = 0;
+int V_sense_LOW = 0;
+float V_sense_HIGH_V = 0;
+float V_sense_LOW_V = 0;
+float V_batt_1 = 0;
+float V_batt_2 = 0;
 
 // lcd
 const int d4 = 4;
@@ -115,7 +134,7 @@ void loop() {
 
     // Data logging  
     // "Time, V batt high, V batt low, current, motor temp, throttle"
-    String dataString = time + V1 + V2 + throttle_val; // make a string for assembling the data to log:
+    String dataString = time + V_batt_1 + V_batt_2 + throttle_val; // make a string for assembling the data to log:
     File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
     if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
         dataFile.println(dataString);
@@ -139,10 +158,17 @@ void loop() {
     // battery - current - motor temp - race time
     // want: each batteries voltage and speed up or slow down
 
-    // battery V1
+    V_sense_HIGH = analogRead(V_sense_pin_HIGH);
+    V_sense_LOW = analogRead(V_sense_pin_LOW);
+    V_sense_HIGH_V = ((float)5 / (float)255) * (float)5 * (float)V_sense_HIGH;
+    V_sense_LOW_V = ((float)5 / (float)255) * (float)2.5 * (float)V_sense_LOW;
+    V_batt_1 = V_sense_HIGH_V - V_sense_LOW_V;
+    V_batt_2 = V_sense_LOW_V;
+    V_batt_1 = (float)V_batt_1 * (float)0.31125;
+    V_batt_2 = (float)V_batt_2 * (float)0.362792;
+
     lcd.setCursor(1, 0);
-    lcd.print(V1);
-    // battery V2
-    lcd.setCursor(10, 0);
-    lcd.print(V2);
+    lcd.print(V_batt_1);
+    lcd.setCursor(1, 1);
+    lcd.print(V_batt_2);
 }
