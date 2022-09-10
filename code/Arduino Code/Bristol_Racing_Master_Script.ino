@@ -13,8 +13,8 @@ A0  -   Throttle input
 A1  -   Thermistor
 
 1   -   
-2   -   to be used to detect time start
-3   -   PWM output
+2   -  
+3   -  
 4   -   d4      LCD      
 5   -   d5      LCD
 6   -   d6      LCD

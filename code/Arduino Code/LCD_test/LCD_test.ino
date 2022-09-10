@@ -6,6 +6,12 @@
 // A to 5V via a 10kohm resistor
 // K to GND
 
+
+// GND
+// 5V
+//
+
+
 // pin 7 to be used to detect time start
 
 // include the library code:
