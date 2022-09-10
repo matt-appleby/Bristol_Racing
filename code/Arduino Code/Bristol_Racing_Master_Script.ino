@@ -26,6 +26,13 @@ A1  -   Thermistor
 12  -   MISO    SD card
 13  -   SCK     SD card
 */
+// to lCD connections:
+// VSS to GND
+// VDD to 5V
+// RW to GND
+// 5V ----10kohms---- V0 ----1kohms---- GND <--- potential divider for V0
+// A to 5V via a 10kohm resistor
+// K to GND
 
 // Thermistor potential divider wiring:
 // V_in ----R_set---- A1 ----Thermistor---- GND
@@ -177,4 +184,7 @@ void loop() {
     // motor temp
     lcd.setCursor(1, 1);
     lcd.print(T);
+
+
+
 }

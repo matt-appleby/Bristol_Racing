@@ -1,0 +1,4 @@
+{
+    "board": "arduino:avr:uno",
+    "sketch": "Bristol_Racing_Master_Script\\Bristol_Racing_Master_Script.ino"
+}

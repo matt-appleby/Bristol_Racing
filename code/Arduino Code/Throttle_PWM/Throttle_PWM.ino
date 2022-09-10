@@ -6,6 +6,7 @@ float throttle_val_pct = 0;
 
 void setup() {
   pinMode(PWM_pin, OUTPUT);
+  Serial.begin(9600);
 }
 
 void loop() {
@@ -18,5 +19,5 @@ void loop() {
   if (PWM_pct <= 1) PWM_pct = 0;
 
   analogWrite(PWM_pin, PWM_pct);
-
+  Serial.println(throttle_val_pct);
 }
