@@ -141,19 +141,6 @@ void loop() {
         dataFile.close();
     }
 
-    /*
-    race_percentage=int(nMinutes*100/60);
-    //work in progress
-    battery_percentage=12;
-    lcd.setCursor(1, 5);
-    if (race_percentage > battery_percentage){
-        lcd.print("+++");
-    }
-    else {
-        lcd.print("---");
-    }
-    */
-
     //output to lcd
     // battery - current - motor temp - race time
     // want: each batteries voltage and speed up or slow down
@@ -167,8 +154,23 @@ void loop() {
     V_batt_1 = (float)V_batt_1 * (float)0.31125;
     V_batt_2 = (float)V_batt_2 * (float)0.362792;
 
+    V_batt_1=float(int(10*V_batt_1))/10;
+    V_batt_2=float(int(10*V_batt_2))/10;
+
     lcd.setCursor(1, 0);
     lcd.print(V_batt_1);
     lcd.setCursor(1, 1);
     lcd.print(V_batt_2);
+    /*
+    race_percentage=int(nMinutes*100/60);
+    //work in progress
+    battery_percentage=12;
+    lcd.setCursor(1, 5);
+    if (race_percentage > battery_percentage){
+        lcd.print("+++");
+    }
+    else {
+        lcd.print("---");
+    }
+    */
 }
