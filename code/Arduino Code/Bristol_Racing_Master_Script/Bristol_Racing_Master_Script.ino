@@ -121,7 +121,7 @@ void loop() {
     long int time = millis();
     nSeconds = ((time-race_time) % 60000) / 1000;
     nMinutes = (time-race_time) / 60000;
-    lcd.setCursor(10, 1);
+    lcd.setCursor(10, 0);
     if (nMinutes <= 9) {
         lcd.print("0");
     }
@@ -134,7 +134,7 @@ void loop() {
 
     // Data logging  
     // "Time, V batt high, V batt low, current, motor temp, throttle"
-    String dataString = time + V_batt_1 + V_batt_2 + throttle_val; // make a string for assembling the data to log:
+    String dataString = String(time) + V_batt_1 + V_batt_2 + throttle_val; // make a string for assembling the data to log:
     File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
     if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
         dataFile.println(dataString);
@@ -145,6 +145,7 @@ void loop() {
     // battery - current - motor temp - race time
     // want: each batteries voltage and speed up or slow down
 
+    // voltage sense
     V_sense_HIGH = analogRead(V_sense_pin_HIGH);
     V_sense_LOW = analogRead(V_sense_pin_LOW);
     V_sense_HIGH_V = ((float)5 / (float)255) * (float)5 * (float)V_sense_HIGH;
@@ -154,23 +155,22 @@ void loop() {
     V_batt_1 = (float)V_batt_1 * (float)0.31125;
     V_batt_2 = (float)V_batt_2 * (float)0.362792;
 
-    V_batt_1=float(int(10*V_batt_1))/10;
-    V_batt_2=float(int(10*V_batt_2))/10;
+    //V_batt_1=float(int(10*V_batt_1))/10;
+    //V_batt_2=float(int(10*V_batt_2))/10;
 
     lcd.setCursor(1, 0);
     lcd.print(V_batt_1);
     lcd.setCursor(1, 1);
     lcd.print(V_batt_2);
-    /*
+    
     race_percentage=int(nMinutes*100/60);
-    //work in progress
-    battery_percentage=12;
-    lcd.setCursor(1, 5);
+    battery_percentage=int(((V_batt_1+V_batt_2)-21)*100/(24-21));// (V_total-V_min)/(V_max-M_min)
+    lcd.setCursor(10, 1);
     if (race_percentage > battery_percentage){
         lcd.print("+++");
     }
     else {
         lcd.print("---");
     }
-    */
+    delay(500);
 }
