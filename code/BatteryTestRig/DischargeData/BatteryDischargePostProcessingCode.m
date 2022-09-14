@@ -15,12 +15,12 @@ Data = readmatrix(RunName);
 
 %% Discharge characteristic vs time
 figure
-plot(Time,V)
+plot(Time/60,V)
 ylabel("Voltage")
 hold on
-xlabel("Time s")
+xlabel("Time (min)")
 yyaxis right
-plot(Time, I)
+plot(Time/60, I)
 ylabel("Current A")
 legend("V","I")
 %% Voltage amp hour characteristic

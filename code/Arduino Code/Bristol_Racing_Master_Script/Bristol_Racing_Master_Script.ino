@@ -1,16 +1,10 @@
 // Master script
 
-/* todo:
-
-- voltage sensing
-- current sensing
-*/
- 
 /*
 Pins:
 
 A0  -   Throttle input
-A1  -   Thermistor
+A1
 A2
 A3
 A4 - Battery voltage 1
@@ -115,7 +109,7 @@ void loop() {
     throttle_val_pct = (float)100 * ((float)throttle_val - (float)164) / (float)712;
 
     // time
-    if (race_time==0 && throttle_val_pct>20){
+    if (race_time==0 && throttle_val_pct>80){
         race_time=millis();
     }
     long int time = millis();

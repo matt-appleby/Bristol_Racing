@@ -15,12 +15,12 @@ Data = readmatrix(RunName);
 
 %% Discharge characteristic vs time
 figure
-plot(Time/1000-15,Speed)
+plot(Time/1000,Speed)
 ylabel("Speed")
 %hold on
 xlabel("Time s")
 yyaxis right
-plot(Time/1000-15, Torque)
+plot(Time, )
 %ylabel("Current A")
 %legend("V","I")
 %% Voltage amp hour characteristic
@@ -40,6 +40,6 @@ function [Time,Speed, Torque]=extractData(Data)
     Time=Data(3:end, [2]);
     Time=Time-Time(1)
     Speed=Data(3:end, [3]);
-    Torque=Data(3:end, [5]);
+    Torque=Data(3:end, [4]);
     
 end
