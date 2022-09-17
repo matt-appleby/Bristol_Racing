@@ -34,29 +34,17 @@ A5 - Battery voltage 2
 // K to GND
 
 
-//V sense Connections:
-//PD HIGH Vout - A4
-//PD LOW Vout - A5
-
 #include <SPI.h>
 #include <SD.h>
 #include <LiquidCrystal.h>
-#include "HX711.h"
 
-//Code pinched from: https://forum.arduino.cc/t/rpm-counter-tachometer-with-hall-sensor/621754/3
-
-#define ClockPin 3 // Must be pin 2 or 3
-
+#define ClockPin 3 // Must be pin 2 or 3//Code pinched from: https://forum.arduino.cc/t/rpm-counter-tachometer-with-hall-sensor/621754/3
       // My Encoder has 400 Clock pulses per revolution
       // note that 150000.0 = (60 seonds * 1000000 microseconds)microseconds in a minute / 400 pulses in 1 revolution)
       // change the math to get the proper multiplier for RPM for your encoder
      // yours has 4 pulses in 1 revolution
       // note that 15000000.0 = (60 seconds * 1000000 microseconds)microseconds in a minute / 4 pulses in 1 revolution
 #define Multiplier 60000000.0// don't forget a decimal place to make this number a floating point number
-//#define DOUT  5
-//#define CLK  4
-
-
 
 // throttle
 int throttle_pin = A0;
@@ -125,7 +113,7 @@ void setup() {
 
     Serial.println("card initialized.");
     // load headers into csv
-    String header = "Time, V batt high, V batt low, throttle";// make a string for assembling the data to log:
+    String header = "Time,RPM, V batt high, V batt low, throttle";// make a string for assembling the data to log:
     File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
     if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
         dataFile.println(header);
@@ -158,9 +146,32 @@ void loop() {
     }
     lcd.print(nSeconds);
 
+    //speed
+    float DeltaTime;
+    float SpeedInRPM = 0;
+    float aveSpeed = 0;
+    noInterrupts (); 
+    // Because when the interrupt occurs the EncoderCounter and SpeedInRPM could be interrupted while they 
+    // are being used we need to say hold for a split second while we copy these values down. This doesn't keep the 
+    // interrupt from occurring it just slightly delays it while we maneuver values.
+    // if we don't do this we could be interrupted in the middle of copying a value and the result get a corrupted value.
+    DeltaTime = dTime;
+    interrupts ();
+    
+    //SpeedInRPM = Multiplier / DeltaTime; // Calculate the RPM Switch DeltaT to either positive or negative to represent Forward or reverse RPM
+    // use the speed and counter values for whatever you need to do.
+    static unsigned long SpamTimer;
+    SpeedInRPM = (DeltaTime)? Multiplier / DeltaTime: 0.0; // Calculate the RPM Switch DeltaT to either positive or negative to represent Forward or reverse RPM
+    if ( (unsigned long)(millis() - SpamTimer) >= (100)) {
+        SpamTimer = millis();
+        Serial.print(millis());
+        Serial.print(" ");
+        Serial.print(SpeedInRPM , 3);
+        Serial.print(" RPM ");
+    }
     // Data logging  
     // "Time, V batt high, V batt low, current, motor temp, throttle"
-    String dataString = String(time) + V_batt_1 + V_batt_2 + throttle_val; // make a string for assembling the data to log:
+    String dataString = String(time)+ SpeedInRPM + V_batt_1 + V_batt_2 + throttle_val; // make a string for assembling the data to log:
     File dataFile = SD.open("datalog.txt", FILE_WRITE);// open the file. note that only one file can be open at a time,
     if (dataFile) {                                 // if the file is available, write to it,     // if the file isn't open doesnt write
         dataFile.println(dataString);
@@ -197,28 +208,6 @@ void loop() {
     }
     else {
         lcd.print("---");
-    }
-    float DeltaTime;
-    float SpeedInRPM = 0;
-    float aveSpeed = 0;
-    noInterrupts (); 
-    // Because when the interrupt occurs the EncoderCounter and SpeedInRPM could be interrupted while they 
-    // are being used we need to say hold for a split second while we copy these values down. This doesn't keep the 
-    // interrupt from occurring it just slightly delays it while we maneuver values.
-    // if we don't do this we could be interrupted in the middle of copying a value and the result get a corrupted value.
-    DeltaTime = dTime;
-    interrupts ();
-    
-    //SpeedInRPM = Multiplier / DeltaTime; // Calculate the RPM Switch DeltaT to either positive or negative to represent Forward or reverse RPM
-    // use the speed and counter values for whatever you need to do.
-    static unsigned long SpamTimer;
-    SpeedInRPM = (DeltaTime)? Multiplier / DeltaTime: 0.0; // Calculate the RPM Switch DeltaT to either positive or negative to represent Forward or reverse RPM
-    if ( (unsigned long)(millis() - SpamTimer) >= (100)) {
-        SpamTimer = millis();
-        Serial.print(millis());
-        Serial.print(" ");
-        Serial.print(SpeedInRPM , 3);
-        Serial.print(" RPM ");
     }
     delay(500);
 }
